@@ -1,0 +1,310 @@
+
+INSERT INTO jobs(name, value)
+-- SELECT LEFT(md5(i::TEXT), 10), random() FROM generate_series(1, 10) s(i);
+-- SELECT * FROM jobs;
+
+
+-- Create the registration_purpose table
+CREATE TABLE registration_purpose (
+    id SERIAL PRIMARY KEY,
+    username TEXT NOT NULL,
+    text TEXT NOT NULL,
+);
+
+-- Create the job_statuses table
+CREATE TABLE job_statuses (
+    id SERIAL PRIMARY KEY,
+    status TEXT NOT NULL,
+    job_id INTEGER REFERENCES jobs(id),
+    developer_id INTEGER REFERENCES developers(id),
+);
+
+-- Create the favorites table
+CREATE TABLE favorites (
+    id SERIAL PRIMARY KEY,
+    status TEXT NOT NULL,
+    job_id INTEGER REFERENCES jobs(id),
+    developer_id INTEGER REFERENCES developers(id),
+);
+
+-- Create the files table
+CREATE TABLE files (
+    id SERIAL PRIMARY KEY,
+    path TEXT NOT NULL,
+    type TEXT NOT NULL,
+    size TEXT NOT NULL,
+    job_id INTEGER REFERENCES jobs(id),
+    
+);
+
+-- Create the photos table
+CREATE TABLE photos (
+    id SERIAL PRIMARY KEY,
+    path TEXT NOT NULL,
+    type TEXT NOT NULL,
+    job_id INTEGER REFERENCES jobs(id),
+    developer_id INTEGER REFERENCES developers(id),
+    client_id INTEGER REFERENCES clients(id),
+);
+
+-- Create the feedbacks table
+CREATE TABLE feedbacks (
+    id SERIAL PRIMARY KEY,
+    job_id INTEGER REFERENCES jobs(id),
+    developer_id INTEGER REFERENCES authors(author_id),
+    client_id INTEGER REFERENCES authors(author_id),
+    description TEXT NOT NULL
+);
+
+-- Create the clients table
+CREATE TABLE clients (
+    id SERIAL PRIMARY KEY,
+    first_name TEXT NOT NULL,
+    last_name TEXT NOT NULL,
+    middle_name TEXT,
+    phone TEXT,
+    email TEXT,
+    type TEXT NOT NULL,
+    
+    password TEXT NOT NULL,
+    username TEXT,
+    address_street TEXT,
+    address_city TEXT,
+    address_postal_code TEXT,
+    address_country TEXT,
+    
+    passport_seriesNumber TEXT NOT NULL,
+    passport_deptCode TEXT NOT NULL,
+    passport_issuedBy TEXT NOT NULL,
+    passport_dateOfIssue TEXT NOT NULL,
+    passport_sex TEXT NOT NULL,
+    passport_dateOfBirth TEXT NOT NULL,
+    passport_city TEXT NOT NULL,
+    
+    account_status TEXT NOT NULL,
+    account_lastLoginTimeStamp TEXT NOT NULL,
+    
+    preferences_lang TEXT NOT NULL,
+    preferences_notification TEXT NOT NULL,
+    
+    photo_id INTEGER REFERENCES photos(client_id),
+    
+    communication_email TEXT NOT NULL,
+    communication_phone TEXT NOT NULL,
+    communication_chat TEXT NOT NULL,
+    communication_preferredTime TEXT NOT NULL,
+    
+    
+);
+
+-- Create the developers table
+CREATE TABLE developers (
+    id SERIAL PRIMARY KEY,
+    first_name TEXT NOT NULL,
+    last_name TEXT NOT NULL,
+    middle_name TEXT,
+    phone TEXT,
+    email TEXT,
+    type TEXT NOT NULL,
+    
+    password TEXT NOT NULL,
+    username TEXT,
+    address_street TEXT,
+    address_city TEXT,
+    address_postal_code TEXT,
+    address_country TEXT,
+    
+    passport_seriesNumber TEXT NOT NULL,
+    passport_deptCode TEXT NOT NULL,
+    passport_issuedBy TEXT NOT NULL,
+    passport_dateOfIssue TEXT NOT NULL,
+    passport_sex TEXT NOT NULL,
+    passport_dateOfBirth TEXT NOT NULL,
+    passport_city TEXT NOT NULL,
+    
+    account_status TEXT NOT NULL,
+    account_lastLoginTimeStamp TEXT NOT NULL,
+    
+    preferences_lang TEXT NOT NULL,
+    preferences_notification TEXT NOT NULL,
+    
+    photo_id INTEGER REFERENCES photos(developer_id),
+    
+    communication_email TEXT NOT NULL,
+    communication_phone TEXT NOT NULL,
+    communication_chat TEXT NOT NULL,
+    communication_preferredTime TEXT NOT NULL,
+    
+    
+);
+
+-- Create the jobs table with foreign key references
+CREATE TABLE jobs (
+    id SERIAL PRIMARY KEY,
+    name TEXT NOT NULL,
+    total_time TEXT NOT NULL,
+    deadline TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    stack TEXT NOT NULL,
+    price NUMERIC NOT NULL,
+    description TEXT NOT NULL,
+    required_skills TEXT NOT NULL,
+    categories TEXT NOT NULL,
+    visibility TEXT NOT NULL,
+    type TEXT NOT NULL,
+    
+    location_city TEXT NOT NULL,
+    location_region TEXT NOT NULL,
+    
+    rating_average NUMERIC,
+    rating_count INTEGER,
+    
+    client_id INTEGER REFERENCES clients(id),
+    status_id INTEGER REFERENCES job_statuses(id),
+    
+    favorite_id INTEGER REFERENCES favorites(id),
+    
+    files_id INTEGER REFERENCES files(id),
+    photo_id INTEGER REFERENCES photos(id),
+    feedback_id INTEGER REFERENCES feedbacks(id)
+);
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////
+
+
+-- INSERT INTO jobs(name, value)
+-- SELECT LEFT(md5(i::TEXT), 10), random() FROM generate_series(1, 10) s(i);
+-- SELECT * FROM jobs;
+
+-- Create the clients table
+CREATE TABLE clients (
+    id SERIAL PRIMARY KEY,
+    first_name TEXT NOT NULL,
+    last_name TEXT NOT NULL,
+    middle_name TEXT,
+    phone TEXT,
+    email TEXT,
+    type TEXT NOT NULL,
+    password TEXT NOT NULL,
+    username TEXT,
+    address_street TEXT,
+    address_city TEXT,
+    address_postal_code TEXT,
+    address_country TEXT,
+    account_status TEXT NOT NULL,
+    account_lastLoginTimeStamp TEXT NOT NULL,
+    preferences_lang TEXT NOT NULL,
+    preferences_notification TEXT NOT NULL,
+    photo_id INTEGER REFERENCES photos(id),
+    communication_email TEXT NOT NULL,
+    communication_phone TEXT NOT NULL,
+    communication_chat TEXT NOT NULL,
+    communication_preferredTime TEXT NOT NULL
+);
+
+-- Create the developers table
+CREATE TABLE developers (
+    id SERIAL PRIMARY KEY,
+    first_name TEXT NOT NULL,
+    last_name TEXT NOT NULL,
+    middle_name TEXT,
+    phone TEXT,
+    email TEXT,
+    type TEXT NOT NULL,
+    password TEXT NOT NULL,
+    username TEXT,
+    address_street TEXT,
+    address_city TEXT,
+    address_postal_code TEXT,
+    address_country TEXT,
+    account_status TEXT NOT NULL,
+    account_lastLoginTimeStamp TEXT NOT NULL,
+    preferences_lang TEXT NOT NULL,
+    preferences_notification TEXT NOT NULL,
+    photo_id INTEGER REFERENCES photos(id),
+    communication_email TEXT NOT NULL,
+    communication_phone TEXT NOT NULL,
+    communication_chat TEXT NOT NULL,
+    communication_preferredTime TEXT NOT NULL
+);
+
+-- Create the jobs table with foreign key references
+CREATE TABLE jobs (
+    id SERIAL PRIMARY KEY,
+    name TEXT NOT NULL,
+    total_time TEXT NOT NULL,
+    deadline TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    stack TEXT NOT NULL,
+    price NUMERIC NOT NULL,
+    description TEXT NOT NULL,
+    required_skills TEXT NOT NULL,
+    categories TEXT NOT NULL,
+    visibility TEXT NOT NULL,
+    type TEXT NOT NULL,
+    location_city TEXT NOT NULL,
+    location_region TEXT NOT NULL,
+    rating_average NUMERIC,
+    rating_count INTEGER,
+    client_id INTEGER REFERENCES clients(id),
+    status_id INTEGER REFERENCES job_statuses(id),
+    favorite_id INTEGER REFERENCES favorites(id),
+    files_id INTEGER REFERENCES files(id),
+    photo_id INTEGER REFERENCES photos(id),
+    feedback_id INTEGER REFERENCES feedbacks(id)
+);
+
+-- Create the registration_purpose table
+CREATE TABLE registration_purpose (
+    id SERIAL PRIMARY KEY,
+    username TEXT NOT NULL,
+    text TEXT NOT NULL
+);
+
+-- Create the job_statuses table
+CREATE TABLE job_statuses (
+    id SERIAL PRIMARY KEY,
+    status TEXT NOT NULL,
+    job_id INTEGER REFERENCES jobs(id),
+    developer_id INTEGER REFERENCES developers(id)
+);
+
+-- Create the favorites table
+CREATE TABLE favorites (
+    id SERIAL PRIMARY KEY,
+    status BOOLEAN,
+    job_id INTEGER REFERENCES jobs(id),
+    developer_id INTEGER REFERENCES developers(id)
+);
+
+-- Create the files table
+CREATE TABLE files (
+    id SERIAL PRIMARY KEY,
+    path TEXT NOT NULL,
+    type TEXT NOT NULL,
+    size TEXT NOT NULL,
+    job_id INTEGER REFERENCES jobs(id)
+);
+
+-- Create the photos table
+CREATE TABLE photos (
+    id SERIAL PRIMARY KEY,
+    path TEXT NOT NULL,
+    type TEXT NOT NULL,
+    job_id INTEGER REFERENCES jobs(id),
+    developer_id INTEGER REFERENCES developers(id),
+    client_id INTEGER REFERENCES clients(id)
+);
+
+-- Create the feedbacks table
+CREATE TABLE feedbacks (
+    id SERIAL PRIMARY KEY,
+    job_id INTEGER REFERENCES jobs(id),
+    developer_id INTEGER REFERENCES developers(id),
+    client_id INTEGER REFERENCES clients(id),
+    description TEXT NOT NULL
+);
+
